@@ -4,10 +4,8 @@ from . import models
 
 class LoginForm(forms.Form):
 
-    """ LoginForm Definition """
-
     email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(widget=forms.PasswordInput)
 
     def clean(self):
         email = self.cleaned_data.get("email")
@@ -23,9 +21,6 @@ class LoginForm(forms.Form):
 
 
 class SignUpForm(forms.ModelForm):
-
-    """ Sign Up Form Definition """
-
     class Meta:
         model = models.User
         fields = ("first_name", "last_name", "email")
@@ -33,19 +28,11 @@ class SignUpForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     password1 = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
 
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-        try:
-            models.User.objects.get(email=email)
-            raise forms.ValidationError("User already exists with that email")
-        except models.User.DoesNotExist:
-            return email
-
     def clean_password1(self):
         password = self.cleaned_data.get("password")
         password1 = self.cleaned_data.get("password1")
         if password != password1:
-            raise forms.ValidationError("Password confirmatino does not match")
+            raise forms.ValidationError("Password confirmation does not match")
         else:
             return password
 
@@ -56,4 +43,3 @@ class SignUpForm(forms.ModelForm):
         user.username = email
         user.set_password(password)
         user.save()
-

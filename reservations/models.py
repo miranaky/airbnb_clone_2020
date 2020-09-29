@@ -7,18 +7,18 @@ class Reservation(core_models.TimeStampedModel):
 
     """ Reservation Model Definition """
 
-    STATUS_PANDING = "pending"
+    STATUS_PENDING = "pending"
     STATUS_CONFIRMED = "confirmed"
     STATUS_CANCELED = "canceled"
 
     STATUS_CHOICES = (
-        (STATUS_PANDING, "Pending"),
+        (STATUS_PENDING, "Pending"),
         (STATUS_CONFIRMED, "Confirmed"),
-        (STATUS_CANCELED, " Canceled"),
+        (STATUS_CANCELED, "Canceled"),
     )
 
-    status = models.TextField(
-        max_length=12, choices=STATUS_CHOICES, default=STATUS_PANDING
+    status = models.CharField(
+        max_length=12, choices=STATUS_CHOICES, default=STATUS_PENDING
     )
     check_in = models.DateField()
     check_out = models.DateField()

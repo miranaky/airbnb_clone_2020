@@ -1,7 +1,6 @@
-from django.views import View
 from django.views.generic import FormView
 from django.urls import reverse_lazy
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import redirect, reverse
 from django.contrib.auth import authenticate, login, logout
 from . import forms, models
 
@@ -21,21 +20,20 @@ class LoginView(FormView):
         return super().form_valid(form)
 
 
-def logout_view(request):
+def log_out(request):
     logout(request)
     return redirect(reverse("core:home"))
 
 
-class SignupView(FormView):
+class SignUpView(FormView):
 
     template_name = "users/signup.html"
     form_class = forms.SignUpForm
     success_url = reverse_lazy("core:home")
-
     initial = {
         "first_name": "sungmuk",
-        "last_name": "kang",
-        "email": "smk@ng.com",
+        "last_name": "Kang",
+        "email": "smkang0321@gmail.com",
     }
 
     def form_valid(self, form):
@@ -45,4 +43,18 @@ class SignupView(FormView):
         user = authenticate(self.request, username=email, password=password)
         if user is not None:
             login(self.request, user)
+        user.verify_email()
         return super().form_valid(form)
+
+
+def complete_verification(request, key):
+    try:
+        user = models.User.objects.get(email_secret=key)
+        user.email_verified = True
+        user.email_secret = ""
+        user.save()
+        # to do : add success message
+    except models.User.DoesNotExist:
+        # to do : add erro message
+        pass
+    return redirect(reverse("core:home"))

@@ -13,8 +13,10 @@ class ItemAdmin(admin.ModelAdmin):
     def used_by(self, obj):
         return obj.rooms.count()
 
+    pass
 
-class PhotoInline(admin.StackedInline):
+
+class PhotoInline(admin.TabularInline):
 
     model = models.Photo
 
@@ -45,10 +47,7 @@ class RoomAdmin(admin.ModelAdmin):
         ("Spaces", {"fields": ("guests", "beds", "bedrooms", "baths")}),
         (
             "More About the Space",
-            {
-                "classes": ("collapse",),
-                "fields": ("amenities", "facilities", "house_rules"),
-            },
+            {"fields": ("amenities", "facilities", "house_rules")},
         ),
         ("Last Details", {"fields": ("host",)}),
     )
@@ -70,8 +69,6 @@ class RoomAdmin(admin.ModelAdmin):
         "total_rating",
     )
 
-    ordering = ("name", "price", "bedrooms")
-
     list_filter = (
         "instant_book",
         "host__superhost",
@@ -85,34 +82,29 @@ class RoomAdmin(admin.ModelAdmin):
 
     raw_id_fields = ("host",)
 
-    search_fields = ("^city", "^host__username")
+    search_fields = ("=city", "^host__username")
 
-    filter_horizontal = (
-        "amenities",
-        "facilities",
-        "house_rules",
-    )
+    filter_horizontal = ("amenities", "facilities", "house_rules")
 
     def count_amenities(self, obj):
         return obj.amenities.count()
 
+    count_amenities.short_description = "Amenity Count"
+
     def count_photos(self, obj):
         return obj.photos.count()
 
-    count_photos.short_description = "Photo Counts"
+    count_photos.short_description = "Photo Count"
 
 
 @admin.register(models.Photo)
 class PhotoAdmin(admin.ModelAdmin):
 
-    """ Photo Admin Definition"""
+    """ Phot Admin Definition """
 
-    list_display = (
-        "__str__",
-        "get_thumbnail",
-    )
+    list_display = ("__str__", "get_thumbnail")
 
     def get_thumbnail(self, obj):
-        return mark_safe(f'<img width=50px src="{obj.file.url}" />')
+        return mark_safe(f'<img width="50px" src="{obj.file.url}" />')
 
     get_thumbnail.short_description = "Thumbnail"

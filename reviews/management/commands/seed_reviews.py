@@ -8,14 +8,11 @@ from rooms import models as room_models
 
 class Command(BaseCommand):
 
-    help = "This command creates Many Review"
+    help = "This command creates reviews"
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--number",
-            default=1,
-            type=int,
-            help="How many Review do you want to create",
+            "--number", default=2, type=int, help="How many reviews you want to create"
         )
 
     def handle(self, *args, **options):
@@ -27,15 +24,15 @@ class Command(BaseCommand):
             review_models.Review,
             number,
             {
-                "accuracy": lambda x: random.randint(0, 5),
-                "communication": lambda x: random.randint(0, 5),
-                "cleanliness": lambda x: random.randint(0, 5),
-                "location": lambda x: random.randint(0, 5),
-                "check_in": lambda x: random.randint(0, 5),
-                "value": lambda x: random.randint(0, 5),
+                "accuracy": lambda x: random.randint(0, 6),
+                "communication": lambda x: random.randint(0, 6),
+                "cleanliness": lambda x: random.randint(0, 6),
+                "location": lambda x: random.randint(0, 6),
+                "check_in": lambda x: random.randint(0, 6),
+                "value": lambda x: random.randint(0, 6),
                 "room": lambda x: random.choice(rooms),
                 "user": lambda x: random.choice(users),
             },
         )
         seeder.execute()
-        self.stdout.write(self.style.SUCCESS(f"{number} Review are Created!!"))
+        self.stdout.write(self.style.SUCCESS(f"{number} reviews created!"))

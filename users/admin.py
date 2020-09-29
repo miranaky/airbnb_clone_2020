@@ -3,11 +3,8 @@ from django.contrib.auth.admin import UserAdmin
 from . import models
 
 
-# Register your models here.
-
-
 @admin.register(models.User)
-class UserAdmin(UserAdmin):
+class CustomUserAdmin(UserAdmin):
 
     """ Custom User Admin """
 
@@ -41,5 +38,6 @@ class UserAdmin(UserAdmin):
         "superhost",
         "is_staff",
         "is_superuser",
+        "email_verified",
+        "email_secret",
     )
-
